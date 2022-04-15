@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use App\Models\Kelas;
+use App\Models\MataKuliah;
+use App\Models\Mahasiswa_Matakuliah;
 
 class MahasiswaController extends Controller
 {
@@ -73,9 +75,13 @@ class MahasiswaController extends Controller
  {
     //menampilkan detail data dengan menemukan/berdasarkan Nim Mahasiswa
     //code sebelum dibuat relasi --> $mahasiswa = Mahasiswa::find($Nim);
-    $mahasiswa = Mahasiswa::with('kelas')->where('nim', $Nim)->first();
+   //  $mahasiswa = Mahasiswa::with('kelas')->where('nim', $Nim)->first();
+   //  return view('mahasiswa.detail', ['Mahasiswa' => $mahasiswa]);
 
-    return view('mahasiswa.detail', ['Mahasiswa' => $mahasiswa]);
+   $mahasiswa = Mahasiswa::with('matakuliah')->where('nim', $Nim)->first();  
+   $matakuliah = Matakuliah::all();
+   $mahasiswa_matakuliah = Mahasiswa_Matakuliah::all();
+   return view('mahasiswa.khs', compact('mahasiswa', 'matakuliah', 'mahasiswa_matakuliah'));
  }
 
  public function edit($Nim)
@@ -115,6 +121,13 @@ class MahasiswaController extends Controller
 
     //jika data berhasil diupdate, akan kembali ke halaman utama
     return redirect()->route('mahasiswa.index')->with('success', 'Mahasiswa Berhasil Diupdate');
+ }
+
+ public function khs($Nim){
+   // $mahasiswa = Mahasiswa::with('matakuliah')->where('nim', $Nim)->first();  
+   // $matakuliah = Matakuliah::all();
+   // $mahasiswa_matakuliah = Mahasiswa_Matakuliah::all();
+   // return view('mahasiswa.khs', compact('mahasiswa', 'matakuliah', 'mahasiswa_matakuliah'));
  }
 
  public function destroy( $Nim)
